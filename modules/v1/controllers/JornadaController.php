@@ -44,6 +44,7 @@ class JornadaController extends ActiveController
 			return true;
 		}
 		
+		$eventId = Yii::$app->request->getBodyParam('eventId');
 		$transaction = \Yii::$app->db->beginTransaction();
 		try {			
 			$usuario = Yii::$app->request->getBodyParam('usuario');
@@ -52,7 +53,7 @@ class JornadaController extends ActiveController
 			$justificativa = $this->cadastrarJustificativa();
 			$jornada = $this->cadastrarJornada($usuario, $gps, $justificativa);
 			$transaction->commit();
-	        return $jornada->id;
+	        return ['id' => $jornada->id, 'eventId' => $eventId];
 		}
 		catch(\Exception $e) {
 			$transaction->rollBack();

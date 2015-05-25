@@ -46,13 +46,16 @@ class UsuarioController extends ActiveController
 		if(Yii::$app->request->getIsOptions()) {
 			return true;
 		}
+		
  		$usuario = Yii::$app->request->getBodyParam('usuario');
  		$senha = Yii::$app->request->getBodyParam('senha');
         $usuario = Usuario::findOne(['login' => $usuario]);
+        
         if($usuario && $usuario->senha == $senha &&
         		$usuario->ativo == Usuario::ATIVO) {
-        	return 'OK';
+        	return ['token' => md5($usuario->login . $senha)];
         }
-        throw new UnauthorizedHttpException('Bad credentials', 401);
+        
+        throw new UnauthorizedHttpException('Usuario/senha inválido(s)', 401);
 	}
 }
