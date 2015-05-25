@@ -1,2 +1,4 @@
-# kz-jornada-api
-Jornada API
+KZ-Jornada-API
+=========
+
+Jornada API.
