@@ -9,6 +9,7 @@ use app\modules\v1\models\Usuario;
 use app\modules\v1\models\Justificativa;
 use Yii;
 use yii\web\HttpException;
+use yii\helpers\Json;
 
 class JornadaController extends ActiveController
 {
@@ -44,31 +45,42 @@ class JornadaController extends ActiveController
 			return true;
 		}
 		
-		$eventId = Yii::$app->request->getBodyParam('eventId');
-		$transaction = \Yii::$app->db->beginTransaction();
-		try {			
-			$usuario = Yii::$app->request->getBodyParam('usuario');
-			$usuario = $this->obterUsuario($usuario);
-			$gps = $this->cadastrarGps($usuario->id_usuario);
-			$justificativa = $this->cadastrarJustificativa();
-			$jornada = $this->cadastrarJornada($usuario, $gps, $justificativa);
+		try {
+			$postData = Json::decode(Yii::$app->request->getBodyParam('data'));
+			if(!is_array($postData) || count($postData) <= 0) {
+				throw new HttpException(500, $e->getMessage());
+			}
+			
+			$transaction = \Yii::$app->db->beginTransaction();
+			$eventsIds = array();
+
+			foreach($postData as $itemData) {
+				$eventId = $itemData['eventId'];
+				$eventsIds[] = $eventId;
+				$usuario = $itemData['usuario'];
+				$usuario = $this->obterUsuario($usuario);
+				$gps = $this->cadastrarGps($usuario->id_usuario, $itemData['gps']);
+				$justificativa = $this->cadastrarJustificativa($itemData['justificativa']);
+				$jornada = $this->cadastrarJornada($usuario, $gps, $justificativa, $itemData);
+			}
+			
 			$transaction->commit();
-	        return ['id' => $jornada->id, 'eventId' => $eventId];
+			return ['ids' => $eventsIds];
 		}
 		catch(\Exception $e) {
 			$transaction->rollBack();
 			throw new HttpException(500, $e->getMessage());
-		}
+		}	
 	}
 	
-	private function cadastrarJornada($usuario, $gps, $justificativa) 
+	private function cadastrarJornada($usuario, $gps, $justificativa, $itemData)
 	{
-		$tipo = Yii::$app->request->getBodyParam('tipo');
-		$dataInicial = $this->parseDate(Yii::$app->request->getBodyParam('dataInicial'));
-		$dataFinal = $this->parseDate(Yii::$app->request->getBodyParam('dataFinal'));
-		$imei = Yii::$app->request->getBodyParam('imei');
-		$versao = Yii::$app->request->getBodyParam('versao');
-		
+		$tipo = $itemData['tipo'];
+		$dataInicial = $this->parseDate($itemData['dataInicial']);
+		$dataFinal = $this->parseDate($itemData['dataFinal']);
+		$imei = $itemData['imei'];
+		$versao = $itemData['versao'];
+	
 		$jornada = new Jornada();
 		$jornada->id_usuario = $usuario->id_usuario;
 		$jornada->id_jornada = '1';
@@ -83,22 +95,20 @@ class JornadaController extends ActiveController
 		if($justificativa) {
 			$jornada->id_justificativa = $justificativa->id;
 		}
-		
+	
 		if(!$jornada->save()) {
 			throw new \Exception('Erro cadastrando Jornada.', 500);
 		}
-		
+	
 		return $jornada;
 	}
 	
-	private function cadastrarJustificativa()
+	private function cadastrarJustificativa($descJustificativa)
 	{
-		$descJustificativa = Yii::$app->request->getBodyParam('justificativa');
-		
 		if(empty($descJustificativa)) {
 			return null;
 		}
-		
+	
 		$justificativa = new Justificativa();
 		$justificativa->descricao = $descJustificativa;
 	
@@ -109,18 +119,16 @@ class JornadaController extends ActiveController
 		return $justificativa;
 	}
 	
-	private function cadastrarGps($usuario) 
+	private function cadastrarGps($usuario, $latLong)
 	{
-		$latLong = Yii::$app->request->getBodyParam('gps');
-		
 		$gps = new Gps();
 		$gps->id_usuario = $usuario;
 		$gps->latlong = $latLong;
-		
+	
 		if(!$gps->save()) {
 			throw new \Exception('Erro cadastrando GPS', 500);
 		}
-		
+	
 		return $gps;
 	}
 	
