@@ -37,7 +37,7 @@ class Jornada extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_usuario', 'id_jornada', 'id_gps', 'tipo', 'data_inicio', 'obs', 'imei', 'operador'], 'required'],
+            [['id_usuario', 'id_jornada', 'tipo', 'data_inicio', 'obs', 'imei', 'operador'], 'required'],
             [['id_usuario', 'id_jornada', 'id_justificativa', 'id_gps', 'operador'], 'integer'],
             [['data_inicio', 'data_fim', 'data_server'], 'safe'],
             [['obs'], 'string'],

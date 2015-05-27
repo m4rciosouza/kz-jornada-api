@@ -59,9 +59,10 @@ class JornadaController extends ActiveController
 				$eventsIds[] = $eventId;
 				$usuario = $itemData['usuario'];
 				$usuario = $this->obterUsuario($usuario);
-				$gps = $this->cadastrarGps($usuario->id_usuario, $itemData['gps']);
+				$gpsInicial = $this->cadastrarGps($usuario->id_usuario, $itemData['initialGps']);
+				//TODO $gpsFinal = $this->cadastrarGps($usuario->id_usuario, $itemData['endGps']);
 				$justificativa = $this->cadastrarJustificativa($itemData['justificativa']);
-				$jornada = $this->cadastrarJornada($usuario, $gps, $justificativa, $itemData);
+				$jornada = $this->cadastrarJornada($usuario, $gpsInicial, $justificativa, $itemData);
 			}
 			
 			$transaction->commit();
@@ -84,7 +85,6 @@ class JornadaController extends ActiveController
 		$jornada = new Jornada();
 		$jornada->id_usuario = $usuario->id_usuario;
 		$jornada->id_jornada = '1';
-		$jornada->id_gps = $gps->id_gps;
 		$jornada->tipo = $tipo;
 		$jornada->data_inicio = $dataInicial;
 		$jornada->data_fim = $dataFinal;
@@ -92,6 +92,11 @@ class JornadaController extends ActiveController
 		$jornada->imei = $imei;
 		$jornada->versao = $versao;
 		$jornada->operador = '1';
+		
+		if($gps) {
+			$jornada->id_gps = $gps->id_gps;
+		}
+		
 		if($justificativa) {
 			$jornada->id_justificativa = $justificativa->id;
 		}
@@ -121,6 +126,10 @@ class JornadaController extends ActiveController
 	
 	private function cadastrarGps($usuario, $latLong)
 	{
+		if(empty($latLong)) {
+			return null;
+		}
+		
 		$gps = new Gps();
 		$gps->id_usuario = $usuario;
 		$gps->latlong = $latLong;
