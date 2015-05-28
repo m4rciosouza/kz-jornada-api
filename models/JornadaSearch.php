@@ -18,7 +18,7 @@ class JornadaSearch extends Jornada
     public function rules()
     {
         return [
-            [['id', 'id_usuario', 'id_jornada', 'id_justificativa', 'id_gps', 'operador'], 'integer'],
+            [['id', 'id_usuario', 'id_jornada', 'id_justificativa', 'operador'], 'integer'],
             [['tipo', 'data_inicio', 'data_fim', 'obs', 'imei', 'data_server', 'versao'], 'safe'],
         ];
     }
@@ -56,7 +56,6 @@ class JornadaSearch extends Jornada
             'id_usuario' => $this->id_usuario,
             'id_jornada' => $this->id_jornada,
             'id_justificativa' => $this->id_justificativa,
-            'id_gps' => $this->id_gps,
             'data_inicio' => $this->data_inicio,
             'data_fim' => $this->data_fim,
             'data_server' => $this->data_server,

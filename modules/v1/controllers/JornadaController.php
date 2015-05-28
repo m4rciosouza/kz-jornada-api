@@ -59,10 +59,15 @@ class JornadaController extends ActiveController
 				$eventsIds[] = $eventId;
 				$usuario = $itemData['usuario'];
 				$usuario = $this->obterUsuario($usuario);
-				$gpsInicial = $this->cadastrarGps($usuario->id_usuario, $itemData['initialGps']);
-				//TODO $gpsFinal = $this->cadastrarGps($usuario->id_usuario, $itemData['endGps']);
+				
+				$dataInicial = $this->parseDate($itemData['dataInicial']);
+				$gpsInicial = $this->cadastrarGps($usuario->id_usuario, $itemData['initialGps'], $dataInicial);
+				
+				$dataFinal = $this->parseDate($itemData['dataFinal']);
+				$gpsFinal = $this->cadastrarGps($usuario->id_usuario, $itemData['endGps'], $dataFinal);
+				
 				$justificativa = $this->cadastrarJustificativa($itemData['justificativa']);
-				$jornada = $this->cadastrarJornada($usuario, $gpsInicial, $justificativa, $itemData);
+				$jornada = $this->cadastrarJornada($usuario, $justificativa, $itemData);
 			}
 			
 			$transaction->commit();
@@ -74,7 +79,7 @@ class JornadaController extends ActiveController
 		}	
 	}
 	
-	private function cadastrarJornada($usuario, $gps, $justificativa, $itemData)
+	private function cadastrarJornada($usuario, $justificativa, $itemData)
 	{
 		$tipo = $itemData['tipo'];
 		$dataInicial = $this->parseDate($itemData['dataInicial']);
@@ -92,10 +97,6 @@ class JornadaController extends ActiveController
 		$jornada->imei = $imei;
 		$jornada->versao = $versao;
 		$jornada->operador = '1';
-		
-		if($gps) {
-			$jornada->id_gps = $gps->id_gps;
-		}
 		
 		if($justificativa) {
 			$jornada->id_justificativa = $justificativa->id;
@@ -124,7 +125,7 @@ class JornadaController extends ActiveController
 		return $justificativa;
 	}
 	
-	private function cadastrarGps($usuario, $latLong)
+	private function cadastrarGps($usuario, $latLong, $date)
 	{
 		if(empty($latLong)) {
 			return null;
@@ -133,6 +134,7 @@ class JornadaController extends ActiveController
 		$gps = new Gps();
 		$gps->id_usuario = $usuario;
 		$gps->latlong = $latLong;
+		$gps->data = $date;
 	
 		if(!$gps->save()) {
 			throw new \Exception('Erro cadastrando GPS', 500);

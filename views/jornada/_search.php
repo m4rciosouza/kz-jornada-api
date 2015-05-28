@@ -23,8 +23,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id_justificativa') ?>
 
-    <?= $form->field($model, 'id_gps') ?>
-
     <?php // echo $form->field($model, 'tipo') ?>
 
     <?php // echo $form->field($model, 'data_inicio') ?>

@@ -18,8 +18,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id_justificativa')->textInput() ?>
 
-    <?= $form->field($model, 'id_gps')->textInput() ?>
-
     <?= $form->field($model, 'tipo')->textInput(['maxlength' => 1]) ?>
 
     <?= $form->field($model, 'data_inicio')->textInput() ?>

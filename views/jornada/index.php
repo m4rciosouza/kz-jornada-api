@@ -31,7 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'id_usuario',
             'id_jornada',
             'id_justificativa',
-            'id_gps',
             // 'tipo',
             // 'data_inicio',
             // 'data_fim',

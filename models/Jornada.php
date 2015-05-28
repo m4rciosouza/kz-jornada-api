@@ -11,7 +11,6 @@ use Yii;
  * @property integer $id_usuario
  * @property integer $id_jornada
  * @property integer $id_justificativa
- * @property integer $id_gps
  * @property string $tipo
  * @property string $data_inicio
  * @property string $data_fim
@@ -37,8 +36,8 @@ class Jornada extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_usuario', 'id_jornada', 'id_justificativa', 'id_gps', 'tipo', 'data_inicio', 'data_fim', 'obs', 'imei', 'operador'], 'required'],
-            [['id_usuario', 'id_jornada', 'id_justificativa', 'id_gps', 'operador'], 'integer'],
+            [['id_usuario', 'id_jornada', 'id_justificativa', 'tipo', 'data_inicio', 'data_fim', 'obs', 'imei', 'operador'], 'required'],
+            [['id_usuario', 'id_jornada', 'id_justificativa', 'operador'], 'integer'],
             [['data_inicio', 'data_fim', 'data_server'], 'safe'],
             [['obs'], 'string'],
             [['tipo'], 'string', 'max' => 1],
@@ -57,7 +56,6 @@ class Jornada extends \yii\db\ActiveRecord
             'id_usuario' => Yii::t('jornada', 'Id Usuario'),
             'id_jornada' => Yii::t('jornada', 'Id Jornada'),
             'id_justificativa' => Yii::t('jornada', 'Id Justificativa'),
-            'id_gps' => Yii::t('jornada', 'Id Gps'),
             'tipo' => Yii::t('jornada', 'Tipo'),
             'data_inicio' => Yii::t('jornada', 'Data Inicio'),
             'data_fim' => Yii::t('jornada', 'Data Fim'),
