@@ -56,18 +56,24 @@ class JornadaController extends ActiveController
 
 			foreach($postData as $itemData) {
 				$eventId = $itemData['eventId'];
-				$eventsIds[] = $eventId;
 				$usuario = $itemData['usuario'];
 				$usuario = $this->obterUsuario($usuario);
 				
-				$dataInicial = $this->parseDate($itemData['dataInicial']);
-				$gpsInicial = $this->cadastrarGps($usuario->id_usuario, $itemData['initialGps'], $dataInicial);
-				
-				$dataFinal = $this->parseDate($itemData['dataFinal']);
-				$gpsFinal = $this->cadastrarGps($usuario->id_usuario, $itemData['endGps'], $dataFinal);
-				
 				$justificativa = $this->cadastrarJustificativa($itemData['justificativa']);
 				$jornada = $this->cadastrarJornada($usuario, $justificativa, $itemData);
+
+				if(!is_numeric($eventId)) {
+					$dataInicial = $this->parseDate($itemData['dataInicial']);
+					$gpsInicial = $this->cadastrarGps($usuario->id_usuario, $itemData['initialGps'], $dataInicial);
+				}
+				
+				$dataFinal = $this->parseDate($itemData['dataFinal']);
+				if(empty($dataFinal)) {
+					$eventsIds[] = array('eventId' => $eventId, 'remoteId' => $jornada->id, 'delete' => 'NO');
+				} else {
+					$eventsIds[] = array('eventId' => $eventId, 'delete' => 'OK');
+					$gpsFinal = $this->cadastrarGps($usuario->id_usuario, $itemData['endGps'], $dataFinal);
+				}
 			}
 			
 			$transaction->commit();
@@ -81,13 +87,18 @@ class JornadaController extends ActiveController
 	
 	private function cadastrarJornada($usuario, $justificativa, $itemData)
 	{
+		$eventId = $itemData['eventId'];
 		$tipo = $itemData['tipo'];
 		$dataInicial = $this->parseDate($itemData['dataInicial']);
 		$dataFinal = $this->parseDate($itemData['dataFinal']);
 		$imei = $itemData['imei'];
 		$versao = $itemData['versao'];
 	
-		$jornada = new Jornada();
+		if(is_numeric($eventId)) {
+			$jornada = Jornada::findOne($eventId);	
+		} else {
+			$jornada = new Jornada();
+		}
 		$jornada->id_usuario = $usuario->id_usuario;
 		$jornada->id_jornada = '1';
 		$jornada->tipo = $tipo;
