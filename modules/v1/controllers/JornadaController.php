@@ -48,7 +48,7 @@ class JornadaController extends ActiveController
 		try {
 			$postData = Json::decode(Yii::$app->request->getBodyParam('data'));
 			if(!is_array($postData) || count($postData) <= 0) {
-				throw new HttpException(500, $e->getMessage());
+				throw new HttpException(500, 'Erro obtendo dados do post');
 			}
 			
 			$transaction = \Yii::$app->db->beginTransaction();
@@ -114,7 +114,7 @@ class JornadaController extends ActiveController
 		}
 	
 		if(!$jornada->save()) {
-			throw new \Exception('Erro cadastrando Jornada.', 500);
+			throw new HttpException(500, 'Erro cadastrando Jornada.' . json_encode($jornada->getErrors()));
 		}
 	
 		return $jornada;
@@ -130,7 +130,7 @@ class JornadaController extends ActiveController
 		$justificativa->descricao = $descJustificativa;
 	
 		if(!$justificativa->save()) {
-			throw new \Exception('Erro cadastrando Justificativa.', 500);
+			throw new HttpException(500, 'Erro cadastrando Justificativa.' . json_encode($justificativa->getErrors()));
 		}
 	
 		return $justificativa;
@@ -148,7 +148,7 @@ class JornadaController extends ActiveController
 		$gps->data = $date;
 	
 		if(!$gps->save()) {
-			throw new \Exception('Erro cadastrando GPS', 500);
+			throw new HttpException(500, 'Erro cadastrando GPS.' . json_encode($justificativa->getErrors()));
 		}
 	
 		return $gps;
