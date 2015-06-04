@@ -60,7 +60,7 @@ class Usuario extends \yii\db\ActiveRecord
             'filial' => Yii::t('usuario', 'Filial'),
             'id_integrador' => Yii::t('usuario', 'Id Integrador'),
             'nome' => Yii::t('usuario', 'Nome'),
-            'login' => Yii::t('usuario', 'Login'),
+            'login' => Yii::t('usuario', 'Usuário'),
             'senha' => Yii::t('usuario', 'Senha'),
             'perfil' => Yii::t('usuario', 'Perfil'),
             'id_cliente' => Yii::t('usuario', 'Id Cliente'),

@@ -29,6 +29,63 @@ class Jornada extends \yii\db\ActiveRecord
     {
         return 'jornada';
     }
+    
+    public function getDataInicioBr()
+    {
+    	if($this->data_inicio) {
+    		return Yii::$app->formatter->asDatetime($this->data_inicio, "php:d/m/Y H:i:s");
+    	}
+    	
+    	return $this->data_inicio;
+    }
+    
+    public function getDataFimBr()
+    {
+    	if($this->data_fim) {
+    		return Yii::$app->formatter->asDatetime($this->data_fim, "php:d-m-Y H:i:s");
+    	}
+    	 
+    	return $this->data_fim;
+    }
+    
+    public function getUsuario()
+    {
+    	return $this->hasOne(Usuario::className(), ['id_usuario' => 'id_usuario']);
+    }
+    
+    public function getJustificativa()
+    {
+    	return $this->hasOne(Justificativa::className(), ['id' => 'id_justificativa']);
+    }
+    
+    public function getGpsInicio()
+    {
+    	$gps = Gps::findOne(['id_usuario' => $this->id_usuario, 'data' => $this->data_inicio]);
+    	
+    	return $gps ? $gps->latlong : null;
+    }
+    
+    public function getGpsFim()
+    {
+    	$gps = Gps::findOne(['id_usuario' => $this->id_usuario, 'data' => $this->data_fim]);
+    	
+    	return $gps ? $gps->latlong : null;
+    }
+    
+    public function getTipoDesc() 
+    {
+    	$tipos = [
+    		'1' => 'Aguardando liberação',
+	    	'2' => 'Volante',
+	    	'3' => 'Descanso 30 min',
+	    	'4' => 'Refeição',
+	    	'5' => 'Espera',
+	    	'6' => 'Repouso',
+	    	'7' => 'Folga'
+	    ];
+    	
+    	return $tipos[$this->tipo];
+    }
 
     /**
      * @inheritdoc
@@ -64,6 +121,11 @@ class Jornada extends \yii\db\ActiveRecord
             'data_server' => Yii::t('jornada', 'Data Server'),
             'versao' => Yii::t('jornada', 'Versao'),
             'operador' => Yii::t('jornada', 'Operador'),
+        	'tipoDesc' => Yii::t('jornada', 'Tipo'),
+        	'dataInicioBr' => Yii::t('jornada', 'Data Inicial'),
+        	'dataFimBr' => Yii::t('jornada', 'Data Final'),
+        	'gpsInicio' => Yii::t('jornada', 'GPS Inicial'),
+        	'gpsFim' => Yii::t('jornada', 'GPS Final'),
         ];
     }
 }

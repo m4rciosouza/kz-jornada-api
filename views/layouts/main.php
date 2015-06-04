@@ -25,7 +25,7 @@ AppAsset::register($this);
 
 <?php $this->beginBody() ?>
     <div class="wrap">
-        <?php
+        <?php /*
             NavBar::begin([
                 'brandLabel' => Yii::t('app', 'KAZ-Canvas'),
                 'brandUrl' => Yii::$app->homeUrl.'site',
@@ -91,7 +91,7 @@ AppAsset::register($this);
                             'linkOptions' => ['data-method' => 'post']],
                 ],
             ]);
-            NavBar::end();
+            NavBar::end();*/
         ?>
 
         <div class="container">
@@ -106,9 +106,9 @@ AppAsset::register($this);
         <div class="container">
             <p class="pull-left">
             	&copy; 
-            	<a href="http://kazcanvas.com" alt="<?= Yii::t('app', 'KAZ-Canvas'); ?>" 
-            		title="<?= Yii::t('app', 'KAZ-Canvas'); ?>">
-            		<?= Yii::t('app', 'KAZ-Canvas'); ?>
+            	<a href="http://kazcanvas.com" alt="<?= Yii::t('app', 'KZ-Jornada'); ?>" 
+            		title="<?= Yii::t('app', 'KZ-Jornada'); ?>">
+            		<?= Yii::t('app', 'KZ-Jornada'); ?>
             	</a> 
             	<?= date('Y') ?>
             </p>

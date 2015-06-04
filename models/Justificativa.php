@@ -38,7 +38,7 @@ class Justificativa extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('justificativa', 'ID'),
-            'descricao' => Yii::t('justificativa', 'Descricao'),
+            'descricao' => Yii::t('justificativa', 'Justificativa'),
         ];
     }
 }
